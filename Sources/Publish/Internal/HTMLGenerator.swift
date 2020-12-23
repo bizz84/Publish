@@ -65,7 +65,8 @@ private extension HTMLGenerator {
                     for: item,
                     indentedBy: indentation,
                     using: theme.makeItemHTML,
-                    fileMode: fileMode
+                    fileMode: fileMode,
+                    withPathModifier: context.sectionItemsOutputPathModifier
                 )
             }
         }
@@ -126,10 +127,11 @@ private extension HTMLGenerator {
         for location: T,
         indentedBy indentation: Indentation.Kind?,
         using generator: (T, PublishingContext<Site>) throws -> HTML,
-        fileMode: HTMLFileMode
+        fileMode: HTMLFileMode,
+        withPathModifier pathModifier: (Path) throws -> Path = { $0 }
     ) throws {
         let html = try generator(location, context)
-        let path = filePath(for: location, fileMode: fileMode)
+        let path = try pathModifier(filePath(for: location, fileMode: fileMode))
         let file = try context.createOutputFile(at: path)
         try file.write(html.render(indentedBy: indentation))
     }
