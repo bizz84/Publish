@@ -35,6 +35,7 @@ internal struct MarkdownContentFactory<Site: Website> {
         let outputPath = try context.sectionItemsOutputPathModifier(path)
         return Item(
             path: outputPath,
+            inputPath: path,
             sectionID: sectionID,
             metadata: metadata,
             tags: tags ?? [],
