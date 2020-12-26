@@ -49,9 +49,9 @@ private extension SiteMapGenerator {
                         guard !excludedPaths.contains(item.path) else {
                             return .empty
                         }
-                        let outputPath = try! context.sectionItemsOutputPathModifier(item.path)
+
                         return .url(
-                            .loc(site.url(for: outputPath)),
+                            .loc(site.url(for: item)),
                             .changefreq(.monthly),
                             .priority(0.5),
                             .lastmod(item.lastModified)

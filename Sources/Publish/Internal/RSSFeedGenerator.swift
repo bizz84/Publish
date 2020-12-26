@@ -67,12 +67,11 @@ private extension RSSFeedGenerator {
             .ttl(Int(config.ttlInterval)),
             .atomLink(context.site.url(for: config.targetPath)),
             .forEach(items.prefix(config.maximumItemCount)) { item in
-                let outputPath = try! context.sectionItemsOutputPathModifier(item.path)
-                return .item(
+                .item(
                     .guid(for: item, site: context.site),
                     .title(item.rssTitle),
                     .description(item.description),
-                    .link(/*item.rssProperties.link ?? */context.site.url(for: outputPath)),
+                    .link(item.rssProperties.link ?? context.site.url(for: item)),
                     .pubDate(item.date, timeZone: context.dateFormatter.timeZone),
                     .content(for: item, site: context.site)
                 )
