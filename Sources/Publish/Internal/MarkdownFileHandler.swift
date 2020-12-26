@@ -56,7 +56,8 @@ internal struct MarkdownFileHandler<Site: Website> {
                     let item = try factory.makeItem(
                         fromFile: file,
                         at: path,
-                        sectionID: sectionID
+                        sectionID: sectionID,
+                        context: context
                     )
                   
                     if item.content.isDraft == false {
