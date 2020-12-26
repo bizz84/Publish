@@ -21,7 +21,8 @@ internal struct MarkdownContentFactory<Site: Website> {
 
     func makeItem(fromFile file: File,
                   at path: Path,
-                  sectionID: Site.SectionID) throws -> Item<Site> {
+                  sectionID: Site.SectionID,
+                  context: PublishingContext<Site>) throws -> Item<Site> {
         let markdown = try parser.parse(file.readAsString())
         let decoder = makeMetadataDecoder(for: markdown)
 
@@ -30,9 +31,10 @@ internal struct MarkdownContentFactory<Site: Website> {
         let tags = try decoder.decodeIfPresent("tags", as: [Tag].self)
         let content = try makeContent(fromMarkdown: markdown, file: file, decoder: decoder)
         let rssProperties = try decoder.decodeIfPresent("rss", as: ItemRSSProperties.self)
-
+        // strip "yyyy-mm-dd-" from paths
+        let outputPath = try context.sectionItemsOutputPathModifier(path)
         return Item(
-            path: path,
+            path: outputPath,
             sectionID: sectionID,
             metadata: metadata,
             tags: tags ?? [],
