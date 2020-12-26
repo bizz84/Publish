@@ -23,6 +23,9 @@ public struct PublishingContext<Site: Website> {
     /// The date formatter that this publishing session is using when parsing
     /// dates from Markdown files.
     public var dateFormatter: DateFormatter
+    /// Modifier to be used to customize the output path of all section items.
+    /// Defaults to returning the input path un-modified.
+    public var sectionItemsOutputPathModifier: (Path) throws -> Path = { $0 }
     /// A representation of the website's main index page.
     public var index = Index()
     /// The sections that the website contains.
