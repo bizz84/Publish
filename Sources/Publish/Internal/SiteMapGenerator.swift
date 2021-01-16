@@ -5,6 +5,7 @@
 */
 
 import Plot
+import Foundation
 
 struct SiteMapGenerator<Site: Website> {
     let excludedPaths: Set<Path>
@@ -50,8 +51,14 @@ private extension SiteMapGenerator {
                             return .empty
                         }
 
+                        let url: URL
+                        if let canonicalUrl = item.content.canonicalUrl {
+                            url = URL(string: canonicalUrl)!
+                        } else {
+                            url = site.url(for: item)
+                        }
                         return .url(
-                            .loc(site.url(for: item)),
+                            .loc(url),
                             .changefreq(.monthly),
                             .priority(0.5),
                             .lastmod(item.lastModified)

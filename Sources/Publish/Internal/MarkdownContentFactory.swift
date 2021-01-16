@@ -71,6 +71,7 @@ private extension MarkdownContentFactory {
         let audio = try decoder.decodeIfPresent("audio", as: Audio.self)
         let video = try decoder.decodeIfPresent("video", as: Video.self)
         let isDraft = try decoder.decodeIfPresent("draft", as: Bool.self) ?? false
+        let canonicalUrl = try decoder.decodeIfPresent("canonical-url", as: String.self) ?? nil
 
         return Content(
             title: title ?? markdown.title ?? file.nameExcludingExtension,
@@ -81,7 +82,8 @@ private extension MarkdownContentFactory {
             imagePath: imagePath,
             audio: audio,
             video: video,
-            isDraft: isDraft
+            isDraft: isDraft,
+            canonicalUrl: canonicalUrl
         )
     }
 
