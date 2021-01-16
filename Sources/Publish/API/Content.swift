@@ -18,6 +18,7 @@ public struct Content: Hashable, ContentProtocol {
     public var audio: Audio?
     public var video: Video?
     public var isDraft: Bool
+    public var canonicalUrl: String?
 
     /// Initialize a new instance of this type
     /// - parameter title: The location's title.
@@ -36,7 +37,8 @@ public struct Content: Hashable, ContentProtocol {
                 imagePath: Path? = nil,
                 audio: Audio? = nil,
                 video: Video? = nil,
-                isDraft: Bool = false) {
+                isDraft: Bool = false,
+                canonicalUrl: String? = nil) {
         self.title = title
         self.description = description
         self.body = body
@@ -46,6 +48,7 @@ public struct Content: Hashable, ContentProtocol {
         self.audio = audio
         self.video = video
         self.isDraft = isDraft
+        self.canonicalUrl = canonicalUrl
     }
 }
 
