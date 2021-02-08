@@ -56,10 +56,13 @@ internal struct MarkdownFileHandler<Site: Website> {
                     let item = try factory.makeItem(
                         fromFile: file,
                         at: path,
-                        sectionID: sectionID
+                        sectionID: sectionID,
+                        context: context
                     )
-
-                    context.addItem(item)
+                  
+                    if item.content.isDraft == false {
+                      context.addItem(item)
+                    }
                 } catch {
                     let path = Path(file.path(relativeTo: folder))
                     throw wrap(error, forPath: path)

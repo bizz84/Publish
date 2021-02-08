@@ -21,7 +21,8 @@ internal struct MarkdownContentFactory<Site: Website> {
 
     func makeItem(fromFile file: File,
                   at path: Path,
-                  sectionID: Site.SectionID) throws -> Item<Site> {
+                  sectionID: Site.SectionID,
+                  context: PublishingContext<Site>) throws -> Item<Site> {
         let markdown = try parser.parse(file.readAsString())
         let decoder = makeMetadataDecoder(for: markdown)
 
@@ -30,9 +31,11 @@ internal struct MarkdownContentFactory<Site: Website> {
         let tags = try decoder.decodeIfPresent("tags", as: [Tag].self)
         let content = try makeContent(fromMarkdown: markdown, file: file, decoder: decoder)
         let rssProperties = try decoder.decodeIfPresent("rss", as: ItemRSSProperties.self)
-
+        // strip "yyyy-mm-dd-" from paths
+        let outputPath = try context.sectionItemsOutputPathModifier(path)
         return Item(
-            path: path,
+            path: outputPath,
+            inputPath: path,
             sectionID: sectionID,
             metadata: metadata,
             tags: tags ?? [],
@@ -67,6 +70,8 @@ private extension MarkdownContentFactory {
         let imagePath = try decoder.decodeIfPresent("image", as: Path.self)
         let audio = try decoder.decodeIfPresent("audio", as: Audio.self)
         let video = try decoder.decodeIfPresent("video", as: Video.self)
+        let isDraft = try decoder.decodeIfPresent("draft", as: Bool.self) ?? false
+        let canonicalUrl = try decoder.decodeIfPresent("canonical-url", as: String.self) ?? nil
 
         return Content(
             title: title ?? markdown.title ?? file.nameExcludingExtension,
@@ -76,7 +81,9 @@ private extension MarkdownContentFactory {
             lastModified: lastModified,
             imagePath: imagePath,
             audio: audio,
-            video: video
+            video: video,
+            isDraft: isDraft,
+            canonicalUrl: canonicalUrl
         )
     }
 

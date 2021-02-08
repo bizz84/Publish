@@ -139,19 +139,26 @@ public extension Website {
     /// Return the absolute URL for a given tag.
     /// - parameter tag: The tag to return a URL for.
     func url(for tag: Tag) -> URL {
-        url(for: path(for: tag))
+        url(for: path(for: tag)).withTrailingSlash()
     }
 
     /// Return the absolute URL for a given path.
     /// - parameter path: The path to return a URL for.
     func url(for path: Path) -> URL {
         guard !path.string.isEmpty else { return url }
-        return url.appendingPathComponent(path.string)
+        return url.appendingPathComponent(path.string).withTrailingSlash()
     }
 
     /// Return the absolute URL for a given location.
     /// - parameter location: The location to return a URL for.
     func url(for location: Location) -> URL {
-        url(for: location.path)
+        url(for: location.path).withTrailingSlash()
+    }
+}
+
+private extension URL {
+    // Adding a trailing slash at the end of URLs prevents 301 Moved redirects when opening links
+    func withTrailingSlash() -> URL {
+        absoluteString.hasSuffix("/") ? self : appendingPathComponent("/")
     }
 }

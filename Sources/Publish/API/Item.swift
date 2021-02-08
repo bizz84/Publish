@@ -19,10 +19,12 @@ public struct Item<Site: Website>: AnyItem, Hashable {
     /// this item is for.
     public var metadata: Site.ItemMetadata
     public var tags: [Tag]
+    public var inputPath: Path  { "\(sectionID.rawValue)/\(inputRelativePath)" }
     public var path: Path { makeAbsolutePath() }
     public var content: Content
     public var rssProperties: ItemRSSProperties
 
+    internal let inputRelativePath: Path
     internal let relativePath: Path
 
     /// Initialize a new item programmatically. You can also create items from
@@ -34,11 +36,13 @@ public struct Item<Site: Website>: AnyItem, Hashable {
     /// - parameter content: The main content of the item.
     /// - parameter rssProperties: Properties customizing the item's RSS representation.
     public init(path: Path,
+                inputPath: Path? = nil,
                 sectionID: Site.SectionID,
                 metadata: Site.ItemMetadata,
                 tags: [Tag] = [],
                 content: Content = Content(),
                 rssProperties: ItemRSSProperties = .init()) {
+        self.inputRelativePath = inputPath ?? path
         self.relativePath = path
         self.sectionID = sectionID
         self.metadata = metadata
