@@ -41,7 +41,8 @@ public extension Path {
         }
 
         let component = component.drop(while: { $0 == "/" })
-        let separator = (string.last == "/" ? "" : "/")
-        return "\(string)\(separator)\(component)"
+        // Fix for string interpolation of string paths in macOS 15
+        let needsSeparator = !string.hasSuffix("/")
+        return Path(needsSeparator ? string + "/" + String(component) : string + String(component))        
     }
 }
